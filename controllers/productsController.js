@@ -85,6 +85,7 @@ module.exports.createProduct = async (req, res, next) => {
       filename: f.filename,
     }));
 
+    console.log(product.images);
     // asign current user as author
     product.author = req.user._id;
 
