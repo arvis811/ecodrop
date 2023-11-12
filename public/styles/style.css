@@ -1,0 +1,11 @@
+header {
+  background-color: #5cbb43 !important;
+}
+
+.find-device-btn:hover {
+  background-color: rgb(193, 234, 255) !important;
+}
+
+.give-away-btn:hover {
+  background-color: #1c6fc1 !important;
+}

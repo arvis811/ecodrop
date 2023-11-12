@@ -1,0 +1,21 @@
+{
+  "name": "Eco Drop",
+  "short_name": "Eco Drop",
+  "description": "Eco Drop - A platform connecting users to exchange electronic devices sustainably, promoting reuse and reducing e-waste.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#5CBB43",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/images/pwaicons/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/pwaicons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

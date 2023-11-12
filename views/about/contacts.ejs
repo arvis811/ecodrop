@@ -1,0 +1,69 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container">
+  <h2 class="text-center">About Us</h2>
+
+  <main>
+    <p class="fade-in" style="text-align: justify">At Eco Drop, we are passionate about making a positive impact on the environment and contributing to a sustainable future.</p>
+    <p class="fade-in" style="text-align: justify">Our mission is to encourage individuals to take a step towards environmental responsibility by giving a second life to their old electronic devices. We believe that through education, convenience, and incentives, we can collectively make a difference in reducing electronic waste.</p>
+
+    <h2 class="text-center">Our Approach</h2>
+
+    <p class="fade-in" style="text-align: justify"><strong>Education:</strong> Knowledge is the first step towards change. We provide valuable information about the environmental impact of electronic waste and the benefits of responsible recycling.</p>
+
+    <p class="fade-in" style="text-align: justify">
+      <strong>Convenience:</strong> To facilitate a seamless electronic device exchange process, we offer a user-friendly map where you can list your products, explore options for their disposal, and obtain contact information for potential exchanges. Rather than providing recycling services, we encourage individuals to connect and exchange their old or unused devices with others in the community. This approach not only promotes sustainability but also fosters a sense of community and resourcefulness.
+    </p>
+
+    <p style="text-align: justify"><strong>Incentives:</strong> While we don't offer traditional discounts or rewards, we believe in the intrinsic value of your commitment to recycling. By using our platform, you contribute to a greener future, and that's a reward in itself.</p>
+
+    <h2 class="text-center">Contact Us</h2>
+
+    <div class="contact-info">
+      <p>
+        <strong><i class="bi bi-envelope"></i> Email:</strong> info@ecodrop.com
+      </p>
+      <p>
+        <strong><i class="bi bi-telephone"></i> Phone:</strong> (555) 123-4567
+      </p>
+      <p>
+        <strong><i class="bi bi-geo-alt"></i> Visit Us:</strong> Green street 1
+      </p>
+    </div>
+  </main>
+</div>
+<style>
+  .fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var fadeElements = document.querySelectorAll('.fade-in');
+
+    function isElementInViewport(el) {
+      var rect = el.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+    }
+
+    function handleScroll() {
+      fadeElements.forEach(function (element) {
+        if (isElementInViewport(element)) {
+          element.classList.add('visible');
+        }
+      });
+    }
+
+    // Initial check on page load
+    handleScroll();
+
+    // Listen for scroll events
+    window.addEventListener('scroll', handleScroll);
+  });
+</script>

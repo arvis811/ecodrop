@@ -1,0 +1,81 @@
+<!-- <- include('./iconsSVG') %> -->
+<style>
+  .user-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #1761ab  !important;
+    background-color: #fff;
+    color: #1761ab  !important;
+    text-align: center;
+    line-height: 40px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .active {
+    color: #1761ab  !important;
+  }
+</style>
+
+
+<header class="sticky-top text-body">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg flex-row-reverse">
+      <div class="d-flex">
+        <% if (!currentUser) { %>
+
+        <!-- Define the behavior when user is not logged in -->
+        <button type="button" onclick="location.href='/auth/login'" class="btn btn-sm btn-light me-2">Log in</button>
+        <button type="button" onclick="location.href='/auth/register'" class="btn btn-sm btn-warning">Sign up</button>
+        <% } else { %>
+
+        <!-- Define the behavior when user is logged in -->
+        <p class="my-0 mx-3 d-flex text-white" style="text-transform: capitalize">
+          <div class="d-inline-flex align-items-center">
+          <div class="user-circle me-3">
+            <%= currentUser.username ? currentUser.username.charAt(0).toUpperCase() : '' %>
+          </div>
+        
+        </div></p>
+        <div class="d-inline-flex align-items-center">
+          <a href="/auth/logout" class="me-2 mb-md-0 text-decoration-none d-flex align-items-center text-white">
+            <span class="d-inline-block mr-1">Logout</span> <i class="bi bi-caret-right-fill"></i>
+          </a>
+        </div>
+        <% } %>
+      </div>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link text-white" href="/"><i class="bi bi-lightning-charge-fill" style="font-size: larger;"></i></a>
+          <a class="nav-link text-white" href="/products">Find</a>
+          <a class="nav-link text-white" href="/products/new">Give away</a>
+          <a class="nav-link text-white" href="/dispose">Dispose</a>
+          <a class="nav-link text-white" href="/about">Tips</a>
+          <a class="nav-link text-white" href="/about/contacts">About</a>       
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<script>
+  // Get the current URL path
+  var path = window.location.pathname;
+
+  // Get all the navigation links
+  var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+  // Loop through each navigation link
+  navLinks.forEach(function (link) {
+    // Check if the link's href matches the current path
+    if (link.getAttribute('href') === path) {
+      // Add the active class to the matching link
+      link.classList.add('active');
+      link.classList.add('text-decoration-underline');
+    }
+  });
+</script>

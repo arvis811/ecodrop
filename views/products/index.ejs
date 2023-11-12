@@ -1,0 +1,486 @@
+<% layout('layouts/boilerplate')%>
+<style>
+  .marker-icon {
+    background-position: center;
+    background-size: 22px 22px;
+    border-radius: 50%;
+    height: 22px;
+    left: 4px;
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    transform: rotate(45deg);
+    width: 22px;
+  }
+  .marker {
+    height: 30px;
+    width: 30px;
+  }
+  .marker-content {
+    background: #9b59b6 !important;
+    border-radius: 50% 50% 50% 0;
+    height: 30px;
+    left: 50%;
+    margin: -15px 0 0 -15px;
+    position: absolute;
+    top: 50%;
+    transform: rotate(-45deg);
+    width: 30px;
+  }
+  .marker-content::before {
+    background: #ffffff;
+    border-radius: 50%;
+    content: '';
+    height: 24px;
+    margin: 3px 0 0 3px;
+    position: absolute;
+    width: 24px;
+  }
+</style>
+<style>
+  .mapboxgl-popup-tip {
+    display: none !important;
+  }
+</style>
+<div>
+  <h3 class="text-center">Give New Life to Unwanted Electronics</h3>
+</div>
+<div id="map" class="map" style="width: 100%; height: 400px"></div>
+<!--filters-->
+<div class="col-md-12 mt-3">
+  <form action="/products" method="GET" class="row" role="search" id="filterForm">
+    <div class="d-flex flex-column d-none">
+      <p class="small text-muted">Distance-based search is available when your location is provided. Please wait a moment.</p>
+      <span>Latitude: <input class="user-latitude" id="user-latitude" type="text" name="userlatitude" readonly /></span>
+      <span>Longitude: <input class="user-longitude" id="user-longitude" type="text" name="userlongitude" readonly /></span>
+    </div>
+
+    <!-- Device Status -->
+    <div class="col-md-4">
+      <label class="form-label">Device Status</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-question-diamond"></i>
+        </span>
+        <select class="form-select" id="deviceStatus" name="deviceStatus">
+          <option value=""></option>
+          <option value="working">Working</option>
+          <option value="notWorking">Not Working</option>
+          <option value="damaged">Damaged</option>
+          <option value="refurbished">Refurbished</option>
+          <option value="forParts">For Parts</option>
+          <option value="likeNew">Like New</option>
+          <option value="vintage">Vintage</option>
+          <option value="newInBox">New in Box (NIB)</option>
+        </select>
+      </div>
+    </div>
+
+    <!--device type -->
+    <div class="col-md-4">
+      <label class="form-label">Device Type</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-question-diamond"></i>
+        </span>
+        <select class="form-select" id="deviceType" name="deviceType">
+          <option value=""></option>
+          <optgroup label="Computers and Accessories">
+            <option value="desktopComputer">Desktop Computer</option>
+            <option value="laptop">Laptop</option>
+            <option value="tablet">Tablet</option>
+            <option value="server">Server</option>
+            <option value="workstation">Workstation</option>
+            <option value="allInOneComputer">All-in-One Computer</option>
+            <option value="chromebook">Chromebook</option>
+            <option value="netbook">Netbook</option>
+            <option value="ultrabook">Ultrabook</option>
+            <option value="externalHardDrive">External Hard Drive</option>
+            <option value="usbFlashDrive">USB Flash Drive</option>
+            <option value="graphicsCard">Graphics Card</option>
+            <option value="computerMonitor">Computer Monitor</option>
+            <option value="keyboard">Keyboard</option>
+            <option value="mouse">Mouse</option>
+            <option value="printer">Printer</option>
+            <option value="scanner">Scanner</option>
+            <option value="webcam">Webcam</option>
+            <option value="computerSpeakers">Computer Speakers</option>
+            <option value="router">Router</option>
+            <!-- Add more computer and accessory options here -->
+          </optgroup>
+
+          <optgroup label="Mobile Devices">
+            <option value="smartphone">Smartphone</option>
+            <option value="featurePhone">Feature Phone</option>
+            <option value="smartwatch">Smartwatch</option>
+            <option value="fitnessTracker">Fitness Tracker</option>
+            <option value="portableMediaPlayer">Portable Media Player</option>
+            <option value="eReader">E-Reader</option>
+            <option value="bluetoothHeadphones">Bluetooth Headphones</option>
+            <option value="vrHeadset">VR Headset</option>
+            <option value="augmentedRealityGlasses">Augmented Reality Glasses</option>
+            <option value="portableGPSDevice">Portable GPS Device</option>
+            <!-- Add more mobile device options here -->
+          </optgroup>
+
+          <optgroup label="Audio Devices">
+            <option value="headphones">Headphones</option>
+            <option value="earphones">Earphones</option>
+            <option value="wirelessEarbuds">Wireless Earbuds</option>
+            <option value="bluetoothSpeaker">Bluetooth Speaker</option>
+            <option value="homeTheaterSystem">Home Theater System</option>
+            <option value="soundbar">Soundbar</option>
+            <option value="recordPlayer">Record Player</option>
+            <option value="cdPlayer">CD Player</option>
+            <option value="amplifier">Amplifier</option>
+            <option value="microphone">Microphone</option>
+            <!-- Add more audio device options here -->
+          </optgroup>
+
+          <optgroup label="Cameras and Photography">
+            <option value="digitalCamera">Digital Camera</option>
+            <option value="dslrCamera">DSLR Camera</option>
+            <option value="mirrorlessCamera">Mirrorless Camera</option>
+            <option value="actionCamera">Action Camera</option>
+            <option value="camcorder">Camcorder</option>
+            <option value="drone">Drone</option>
+            <option value="cameraLens">Camera Lens</option>
+            <option value="tripod">Tripod</option>
+            <option value="cameraFlash">Camera Flash</option>
+            <option value="photoPrinter">Photo Printer</option>
+            <!-- Add more camera options here -->
+          </optgroup>
+
+          <optgroup label="Entertainment Systems">
+            <option value="smartTV">Smart TV</option>
+            <option value="4kTV">4K TV</option>
+            <option value="oledTV">OLED TV</option>
+            <option value="bluRayPlayer">Blu-ray Player</option>
+            <option value="gamingConsole">Gaming Console (e.g., Xbox, PlayStation)</option>
+            <option value="streamingDevice">Streaming Device (e.g., Roku, Amazon Fire Stick)</option>
+            <option value="homeTheaterReceiver">Home Theater Receiver</option>
+            <option value="projector">Projector</option>
+            <option value="satelliteReceiver">Satellite Receiver</option>
+            <option value="cableBox">Cable Box</option>
+            <!-- Add more entertainment system options here -->
+          </optgroup>
+
+          <optgroup label="Smart Home Devices">
+            <option value="smartThermostat">Smart Thermostat</option>
+            <option value="smartDoorbell">Smart Doorbell</option>
+            <option value="smartLock">Smart Lock</option>
+            <option value="smartLightingSystem">Smart Lighting System</option>
+            <option value="smartPlugs">Smart Plugs</option>
+            <option value="smartRefrigerator">Smart Refrigerator</option>
+            <option value="smartCoffeeMaker">Smart Coffee Maker</option>
+            <option value="smartVacuumCleaner">Smart Vacuum Cleaner</option>
+            <option value="smartSprinklerSystem">Smart Sprinkler System</option>
+            <option value="homeSecurityCameraSystem">Home Security Camera System</option>
+            <!-- Add more smart home device options here -->
+          </optgroup>
+
+          <optgroup label="Office Electronics">
+            <option value="faxMachine">Fax Machine</option>
+            <option value="copier">Copier</option>
+            <option value="scanner">Scanner</option>
+            <option value="labelPrinter">Label Printer</option>
+            <option value="shredder">Shredder</option>
+            <option value="documentCamera">Document Camera</option>
+            <option value="projector">Projector</option>
+            <option value="electronicWhiteboard">Electronic Whiteboard</option>
+            <option value="timeClock">Time Clock</option>
+            <option value="calculators">Calculators (Scientific, Graphing, etc.)</option>
+            <!-- Add more office electronics options here -->
+          </optgroup>
+
+          <optgroup label="Communication Devices">
+            <option value="twoWayRadio">Two-Way Radio</option>
+            <option value="walkieTalkie">Walkie-Talkie</option>
+            <option value="satellitePhone">Satellite Phone</option>
+            <option value="pagers">Pagers</option>
+            <option value="intercomSystem">Intercom System</option>
+            <option value="landlineTelephone">Landline Telephone</option>
+            <option value="voipPhone">VoIP Phone</option>
+            <option value="mobileHotspot">Mobile Hotspot</option>
+            <option value="shortwaveRadio">Shortwave Radio</option>
+            <option value="hamRadio">Ham Radio</option>
+            <!-- Add more communication device options here -->
+          </optgroup>
+
+          <optgroup label="Health and Fitness Devices">
+            <option value="fitnessTracker">Fitness Tracker</option>
+            <option value="smartScale">Smart Scale</option>
+            <option value="heartRateMonitor">Heart Rate Monitor</option>
+            <option value="bloodPressureMonitor">Blood Pressure Monitor</option>
+            <option value="pulseOximeter">Pulse Oximeter</option>
+            <option value="sleepTracker">Sleep Tracker</option>
+            <option value="ecgMonitor">Electrocardiogram (ECG) Monitor</option>
+            <option value="tensMachine">TENS Machine</option>
+            <option value="pedometer">Pedometer</option>
+            <option value="activityMonitor">Activity Monitor</option>
+            <!-- Add more health and fitness device options here -->
+          </optgroup>
+          <optgroup label="Other"><option value="other">Other</option></optgroup>
+        </select>
+      </div>
+    </div>
+
+    <!-- Distance -->
+    <div class="col-md-4">
+      <label class="form-label" for="distance">Distance from you (km)</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-rulers"></i></span>
+        <input type="text" class="form-control distance" id="distance" min="0" name="maxDistance" value="" />
+      </div>
+    </div>
+
+    <div class="col-md-12 my-3 d-flex">
+      <button class="btn btn-warning search-form-btn me-2" type="submit"><i class="bi bi-search"></i> Search</button>
+      <button class="btn btn-secondary reset-form-btn"><i class="bi bi-eraser-fill"></i> Clear</button>
+    </div>
+
+    <!-- </div>
+    </div> -->
+  </form>
+</div>
+
+<!--devices-->
+<div class="row">
+  <% if (products.length > 0) {%>
+  <div class="col-md-12 mb-3">
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+      <% for (let product of products) { %>
+      <div class="col">
+        <div class="card shadow-sm product-card">
+          <a href="/products/<%=product._id%>" style="text-decoration: none; color: #d4d4d4">
+            <div>
+              <% if(product.images.length) {%>
+
+              <img src="<%=product.images[0].url%>" class="bd-placeholder-img card-img-top" alt="img" width="100%" max-height="225" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+
+              <% } else { %>
+              <img class="img-fluid" src="/images/placeholder.jpg" alt="" />
+
+              <% } %>
+            </div>
+          </a>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-10 d-flex justify-content-between align-items-center">
+                <small class="text-body-secondary d-flex"
+                  ><div data-productCoordinates="<%=product.location.coordinates %>" class="product-coordinates" style="cursor: pointer"><i class="bi bi-geo-alt-fill" style="pointer-events: none"></i></div>
+                  <div class="distance-text mx-2">Calculating...</div></small
+                >
+              </div>
+
+              <div class="col-2 d-flex justify-content-end align-items-center d-none">
+                <div class="form-check text-secondary">
+                  <input class="form-check-input compare-checkbox d-none" type="checkbox" value="" id="product_<%=product._id%>" style="cursor: pointer" />
+                  <label class="form-check-label" for="product_<%=product._id%>" style="cursor: pointer">
+                    <i class="bi bi-intersect"></i>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="col-md-12">
+    <p class="text-center">No matching devices found. Please adjust your search criteria.</p>
+  </div>
+  <% } %>
+</div>
+
+<!-- TOP PAGINATION ON MAP-->
+<p class="d-none current-page"><%= currentPage %></p>
+<div class="col-md-12">
+  <nav class="mt-5" aria-label="Page navigation">
+    <ul class="d-flex justify-content-center" style="padding: 0">
+      <div class="custom-page-link prev" style="width: 120px;text-align: center; ">
+        <a
+         
+          class="btn btn-primary  px-3 custom-page-link <%= currentPage <= 1 ? 'disabled' : '' %>"
+          href="/products?page=<%= currentPage - 1  %>&limit=<%= limitPerPage %>"
+          aria-label="Previous"
+        >
+          <span aria-hidden="true"><i class="bi bi-arrow-left"></i><span id="d-none d-sm-inline-block"></span>
+        </a>
+      </div>
+
+      <div class=" custom-page-link next "  style="width: 120px; text-align: center;">
+        <a
+        
+          class="btn btn-primary px-3 custom-page-link <%= currentPage >= totalPages ? 'disabled' : '' %>"
+          href="/products?page=<%= currentPage < totalPages ? currentPage + 1 : currentPage  %>&limit=<%= limitPerPage %>"
+          aria-label="Next"
+        >
+          <span id="d-none d-sm-inline-block"></span
+          ><span aria-hidden="true"><i class="bi bi-arrow-right"></i></span>
+        </a>
+      </div>
+    </ul>
+  </nav>
+</div>
+
+
+<script>
+  if ('geolocation' in navigator) {
+    let userLatitude = document.querySelector('#user-latitude');
+    let userLongitude = document.querySelector('#user-longitude');
+    // geolocation is available
+    navigator.geolocation.getCurrentPosition((position) => {
+      userLatitude.value = position.coords.latitude;
+      userLongitude.value = position.coords.longitude;
+      //console.log('lat, lng', userLatitude, userLongitude)
+    });
+  }
+</script>
+
+<script>
+  const allProductCards = document.querySelectorAll('.product-card');
+  allProductCards.forEach((card) => {
+    const productCoordinatesContainer = card.querySelector('.product-coordinates');
+    const productCoordinates = productCoordinatesContainer.getAttribute('data-productCoordinates');
+    const coordinatesArrayLngLat = productCoordinates.split(',');
+    let productLng = coordinatesArrayLngLat[0];
+    let productLat = coordinatesArrayLngLat[1];
+    let newDist = card.querySelector('.distance-text');
+    // add button on map to zoom to current location
+    let userLat;
+    let userLng;
+
+    if ('geolocation' in navigator) {
+      // geolocation is available
+      navigator.geolocation.getCurrentPosition((position) => {
+        userLat = position.coords.latitude;
+        userLng = position.coords.longitude;
+
+        function DegreeToRadian(coordinate) {
+          return (coordinate * Math.PI) / 180;
+        }
+        function CalculateDistance() {
+          const latitude1 = DegreeToRadian(Number(userLat));
+          const longitude1 = DegreeToRadian(Number(userLng));
+
+          const latitude2 = DegreeToRadian(Number(productLat));
+          const longitude2 = DegreeToRadian(Number(productLng));
+
+          // The formula
+          const latDiff = latitude2 - latitude1;
+          const lonDiff = longitude2 - longitude1;
+          const R = 6371000 / 1000;
+
+          const a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(lonDiff / 2) * Math.sin(lonDiff / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+          const d = R * c;
+
+          const dist = Math.acos(Math.sin(latitude1) * Math.sin(latitude2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.cos(lonDiff)) * R;
+          return dist.toFixed(2);
+        }
+        let result = CalculateDistance();
+
+        newDist.innerHTML = `${result} km`;
+      });
+    }
+  });
+</script>
+
+
+<script>
+
+  // Get the filter form element
+  let filterForm = document.getElementById('filterForm');
+
+  // Add an event listener to the form's submit event
+  filterForm.addEventListener('submit', function(e) {
+    // Get the selected filter values
+    var deviceStatus = document.querySelector('#deviceStatus').value;
+    var deviceType = document.querySelector('#deviceType').value;
+    var distance = document.querySelector('#distance').value;
+  
+    // Save the filter values to the local storage
+    localStorage.setItem('deviceStatus', deviceStatus);
+    localStorage.setItem('deviceType', deviceType);
+    localStorage.setItem('distance', distance);
+
+  });
+
+
+
+// Function to retrieve filter values from local storage
+function retrieveFilterValues() {
+  // Set the saved filter values from the local storage
+  document.querySelector('#deviceStatus').value = localStorage.getItem('deviceStatus') || '';
+  document.querySelector('#deviceType').value = localStorage.getItem('deviceType') || '';
+  document.querySelector('#distance').value = localStorage.getItem('distance') || '';
+
+}
+
+let resetFormBtn = document.querySelector(".reset-form-btn")
+
+
+// Function to clear the form filter values
+function clearFormFilterValues() {
+    document.querySelector('#deviceStatus').value = '';
+    document.querySelector('#deviceType').value = '';
+    document.querySelector('#distance').value = '';
+
+}
+
+
+// Event listener for the reset button
+resetFormBtn.addEventListener("click", (e) => {
+ // e.preventDefault();
+  clearFormFilterValues();
+});
+
+const nextBtn = document.querySelector('.next')
+const prevBtn = document.querySelector('.prev')
+let currentPage = document.querySelector('.current-page').innerText
+
+
+
+
+// Previous button event listener
+prevBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  navigateToPage(Number(currentPage) - 1);
+});
+
+// Next button event listener
+nextBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  navigateToPage(Number(currentPage) + 1);
+});
+
+// Function to handle pagination
+function navigateToPage(pageNumber) {
+  // Perform logic to navigate to the specified page
+  const limitPerPage = 10; // Replace with your limit per page value
+  const url = `/products?page=${pageNumber}&limit=${limitPerPage}`;
+  
+  // Perform additional logic if needed, such as making an API request or updating the UI
+  window.location.href = url; // Navigate to the specified page
+}
+
+
+
+ // On page load, retrieve filter values
+ window.addEventListener("load", retrieveFilterValues);
+
+</script>
+
+
+<script>
+  const TOMTOMTOKEN = "<%-process.env.TOMTOM_API_KEY%>";
+  const products = {features: <%-JSON.stringify(products)%>}
+  //const selectedPolygonCoordinates = {features: <-JSON.stringify(selectedPolygonCoordinates)%>}
+</script>
+
+<script src="/scripts/clusterMap.js"></script>
