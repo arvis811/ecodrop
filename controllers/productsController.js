@@ -61,7 +61,7 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createProduct = async (req, res, next) => {
-  console.log("kaka");
+  console.log("kaka save");
   try {
     if (req.body.product.latitude === null || req.body.product.longitude === null || req.body.product.latitude === '' || req.body.product.longitude === '' || isNaN(req.body.product.latitude) || isNaN(req.body.product.longitude)) {
       return res.redirect('/products/new');
